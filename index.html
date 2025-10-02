@@ -1,40 +1,53 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Кейс-бот</title>
-  <link rel="stylesheet" href="style.css"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gifts Cases App</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
-  <div class="header">
-    <img id="avatar" class="avatar" src="" alt="User Avatar">
-    <div class="user-info">
-      <div id="username">@user</div>
-      <div id="balance">Баланс: 0₽</div>
-    </div>
-  </div>
+    <header>
+        <h1>Case Gifts</h1>
+    </header>
 
-  <div class="cases-container">
-    <!-- Пример кейса -->
-    <div class="case" onclick="openCase('case1')">
-      <img src="images/case1.png" alt="Case Image">
-      <p>Синий кейс</p>
-    </div>
-    <!-- Добавь больше кейсов -->
-  </div>
+    <main class="cases-container">
+        <div id="cases-grid" class="cases-grid">
+            <!-- 4 квадрата для изображений -->
+            <div class="case-card">
+                <input type="text" class="image-input" placeholder="Вставьте URL картинки">
+                <div class="image-preview"></div>
+                <input type="number" class="price-input" placeholder="Цена TON" step="0.01">
+            </div>
+            <div class="case-card">
+                <input type="text" class="image-input" placeholder="Вставьте URL картинки">
+                <div class="image-preview"></div>
+                <input type="number" class="price-input" placeholder="Цена TON" step="0.01">
+            </div>
+            <div class="case-card">
+                <input type="text" class="image-input" placeholder="Вставьте URL картинки">
+                <div class="image-preview"></div>
+                <input type="number" class="price-input" placeholder="Цена TON" step="0.01">
+            </div>
+            <div class="case-card">
+                <input type="text" class="image-input" placeholder="Вставьте URL картинки">
+                <div class="image-preview"></div>
+                <input type="number" class="price-input" placeholder="Цена TON" step="0.01">
+            </div>
+        </div>
+    </main>
 
-  <div class="modal" id="caseModal">
-    <div class="modal-content">
-      <div class="roulette" id="roulette">
-        <!-- Здесь крутятся предметы -->
-      </div>
-      <button onclick="spinCase()">Крутить 🎯</button>
-      <div class="drop" id="dropResult">Возможный дроп</div>
-    </div>
-  </div>
+    <footer class="tabs">
+        <button class="tab-btn active">Main</button>
+        <button class="tab-btn">Weekly</button>
+        <button class="tab-btn">JackPot</button>
+        <button class="tab-btn">Upgrade</button>
+        <button class="tab-btn">Profile</button>
+    </footer>
 
-  <script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
 
