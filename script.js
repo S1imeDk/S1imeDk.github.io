@@ -1,25 +1,51 @@
-// Пример простой симуляции
-const dropItems = ["🔫 AWP", "🔪 Нож", "💣 Граната", "🔫 P90", "🔥 Огнемёт"];
+// Supabase config — замени на свои данные
+const supabaseUrl = 'YOUR_SUPABASE_URL';
+const supabaseKey = 'YOUR_SUPABASE_ANON_KEY';
+const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-function getQueryParam(param) {
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get(param);
+// Telegram WebApp init (для Mini App)
+if (window.Telegram?.WebApp) {
+    Telegram.WebApp.ready();
+    Telegram.WebApp.expand();
 }
 
-window.onload = function () {
-    const username = getQueryParam("username") || "unknown";
-    document.getElementById("username").innerText = "@" + username;
-    document.getElementById("balance").innerText = "Баланс: 500₽";
+// Обновление предпросмотра изображения
+document.querySelectorAll('.image-input').forEach(input => {
+    input.addEventListener('input', function() {
+        const preview = this.nextElementSibling;
+        const img = preview.querySelector('img') || document.createElement('img');
+        img.src = this.value || 'https://via.placeholder.com/150?text=No+Image';
+        if (!preview.querySelector('img')) preview.appendChild(img);
+    });
+});
 
-    // Можно загружать аватар с помощью Telegram API через user_id (если ты будешь хранить это на бэке)
-};
+// Сохранение цены в Supabase
+document.querySelectorAll('.price-input').forEach(input => {
+    input.addEventListener('change', async function() {
+        const caseCard = this.closest('.case-card');
+        const imageInput = caseCard.querySelector('.image-input').value;
+        const newPrice = parseFloat(this.value) || 0;
 
-function openCase(caseId) {
-    document.getElementById("caseModal").style.display = "flex";
-    document.getElementById("dropResult").innerText = "Возможный дроп...";
-}
+        const { error } = await supabase
+            .from('cases')
+            .upsert({
+                image_url: imageInput,
+                price: newPrice
+            }, {
+                onConflict: 'id' // Предполагаем, что у тебя есть id, если нет — убери
+            });
+        if (error) console.error('Ошибка обновления:', error);
+    });
+});
 
-function spinCase() {
-    const result = dropItems[Math.floor(Math.random() * dropItems.length)];
-    document.getElementById("dropResult").innerText = "🎉 Тебе выпало: " + result;
-}
+// Инициализация
+document.addEventListener('DOMContentLoaded', () => {
+    // Табы
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            // TODO: Переключение секций
+        });
+    });
+});
