@@ -3,50 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gifts Cases App</title>
+    <title>Case Photo App</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
     <header>
-        <h1>Case Gifts</h1>
+        <div class="user-info">
+            <span class="avatar">Ава</span>
+            <span class="username"></span>
+            <span class="balance">0.00 TON</span>
+        </div>
     </header>
 
-    <main class="cases-container">
-        <div id="cases-grid" class="cases-grid">
+    <main>
+        <div class="photo-title">Какое нибудь фото</div>
+        <div class="cases-container">
             <div class="case-card">
-                <input type="text" class="image-input" placeholder="URL">
+                <input type="text" class="image-input" placeholder="Вставьте URL картинки">
                 <div class="image-preview"></div>
-                <input type="number" class="price-input" placeholder="Цена" step="0.01">
+                <input type="number" class="price-input" placeholder="Цена кейса" step="0.01">
             </div>
             <div class="case-card">
-                <input type="text" class="image-input" placeholder="URL">
+                <input type="text" class="image-input" placeholder="Вставьте URL картинки">
                 <div class="image-preview"></div>
-                <input type="number" class="price-input" placeholder="Цена" step="0.01">
-            </div>
-            <div class="case-card">
-                <input type="text" class="image-input" placeholder="URL">
-                <div class="image-preview"></div>
-                <input type="number" class="price-input" placeholder="Цена" step="0.01">
-            </div>
-            <div class="case-card">
-                <input type="text" class="image-input" placeholder="UR">
-                <div class="image-preview"></div>
-                <input type="number" class="price-input" placeholder="Цена" step="0.01">
+                <input type="number" class="price-input" placeholder="Цена кейса" step="0.01">
             </div>
         </div>
     </main>
 
-    <footer class="tabs">
-        <button class="tab-btn active">Main</button>
-        <button class="tab-btn">Weekly</button>
-        <button class="tab-btn">JackPot</button>
-        <button class="tab-btn">Upgrade</button>
-        <button class="tab-btn">Profile</button>
-    </footer>
-
     <script src="script.js"></script>
 </body>
 </html>
-
