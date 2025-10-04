@@ -6,11 +6,12 @@
     <title>Case Photo App</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
     <header>
         <div class="user-info">
-            <span class="avatar">Ава</span>
+            <span class="avatar"></span>
             <span class="username"></span>
             <span class="balance">0.00 TON</span>
         </div>
@@ -19,16 +20,8 @@
     <main>
         <div class="photo-title">Какое нибудь фото</div>
         <div class="cases-container">
-            <div class="case-card">
-                <input type="text" class="image-input" placeholder="Вставьте URL картинки">
-                <div class="image-preview"></div>
-                <input type="number" class="price-input" placeholder="Цена кейса" step="0.01">
-            </div>
-            <div class="case-card">
-                <input type="text" class="image-input" placeholder="Вставьте URL картинки">
-                <div class="image-preview"></div>
-                <input type="number" class="price-input" placeholder="Цена кейса" step="0.01">
-            </div>
+            <div class="case-card" data-id="1"></div>
+            <div class="case-card" data-id="2"></div>
         </div>
     </main>
 
