@@ -32,6 +32,8 @@ header {
     text-align: center;
     line-height: 24px;
     color: #000;
+    background-image: url('https://via.placeholder.com/24?text=A');
+    background-size: cover;
 }
 
 .username {
@@ -70,43 +72,20 @@ header {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
-}
-
-.image-input {
-    width: 100%;
-    padding: 5px;
-    border: 1px solid #333;
-    border-radius: 4px;
-    background: #1a1a1a;
+    justify-content: center;
+    font-size: 16px;
     color: #fff;
-    text-align: center;
 }
 
-.image-preview {
+.case-card img {
     width: 100%;
     height: 150px;
-    background: #2a2a2a;
-    border-radius: 8px;
-    margin: 10px 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-}
-
-.image-preview img {
-    width: 100%;
-    height: 100%;
     object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 10px;
 }
 
-.price-input {
-    width: 100%;
-    padding: 5px;
-    border: 1px solid #333;
-    border-radius: 4px;
-    background: #1a1a1a;
-    color: #fff;
-    text-align: center;
+.case-card .price {
+    font-size: 18px;
+    margin-top: 10px;
 }
