@@ -1,3 +1,8 @@
+// Supabase config — замени на свои данные
+const supabaseUrl = 'YOUR_SUPABASE_URL';
+const supabaseKey = 'YOUR_SUPABASE_ANON_KEY';
+const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
 // Инициализация Telegram WebApp
 function initTelegram() {
     if (window.Telegram?.WebApp) {
@@ -9,24 +14,38 @@ function initTelegram() {
         const user = tg.initDataUnsafe?.user;
         if (user) {
             document.querySelector('.username').textContent = user.username || 'Гость';
-            document.querySelector('.avatar').textContent = user.username ? user.username[0] : 'А';
+            const avatarUrl = user.photo_url || 'https://via.placeholder.com/24?text=' + (user.username ? user.username[0] : 'A');
+            document.querySelector('.avatar').style.backgroundImage = `url(${avatarUrl})`;
+        } else {
+            document.querySelector('.username').textContent = 'Гость';
+            document.querySelector('.avatar').style.backgroundImage = 'ur[](https://via.placeholder.com/24?text=A)';
         }
-    } else {
-        document.querySelector('.username').textContent = 'Гость';
     }
 }
 
-// Обновление предпросмотра изображения
-document.querySelectorAll('.image-input').forEach(input => {
-    input.addEventListener('input', function() {
-        const preview = this.nextElementSibling;
-        const img = preview.querySelector('img') || document.createElement('img');
-        img.src = this.value || 'https://via.placeholder.com/150?text=No+Image';
-        if (!preview.querySelector('img')) preview.appendChild(img);
-    });
-});
+// Загрузка кейсов из Supabase
+async function loadCases() {
+    const { data: cases, error } = await supabase
+        .from('cases')
+        .select('*')
+        .limit(2);
 
-// Инициализация при загрузке
+    if (error) {
+        console.error('Ошибка загрузки:', error);
+        return;
+    }
+
+    const container = document.querySelector('.cases-container');
+    container.innerHTML = cases.map(caseItem => `
+        <div class="case-card" data-id="${caseItem.id}">
+            <img src="${caseItem.image_url || 'https://via.placeholder.com/150?text=No+Image'}" alt="Case Image" onerror="this.src='https://via.placeholder.com/150?text=Error'">
+            <div class="price">${caseItem.price || 0} TON</div>
+        </div>
+    `).join('');
+}
+
+// Инициализация
 document.addEventListener('DOMContentLoaded', () => {
     initTelegram();
+    loadCases();
 });
