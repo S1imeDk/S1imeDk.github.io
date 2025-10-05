@@ -1,8 +1,3 @@
-// Supabase config — замени на свои данные
-const supabaseUrl = 'https://qxdgipwmfmzhzabplypc.supabase.com';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4ZGdpcHdtZm16aHphYnBseXBjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ2MDE4MTksImV4cCI6MjA3MDE3NzgxOX0.awTKjqPUPuZwm6Tb6_jQKMLzICb_ir-5bvXNXHVnhsw';
-const supabase = supabase.createClient(supabaseUrl, supabaseKey);
-
 // Инициализация Telegram WebApp
 function initTelegram() {
     if (window.Telegram?.WebApp) {
@@ -23,25 +18,33 @@ function initTelegram() {
     }
 }
 
-// Загрузка кейсов из Supabase
+// Загрузка кейсов из JSON
 async function loadCases() {
-    const { data: cases, error } = await supabase
-        .from('cases')
-        .select('*')
-        .limit(2);
+    try {
+        const response = await fetch('/cases.json');
+        const cases = await response.json();
 
-    if (error) {
-        console.error('Ошибка загрузки:', error);
-        return;
+        const container = document.querySelector('.cases-container');
+        container.innerHTML = cases.map((caseItem, index) => `
+            <div class="case-card" data-id="${index + 1}">
+                <img src="${caseItem.image_url || 'https://via.placeholder.com/150?text=No+Image'}" alt="Case Image" onerror="this.src='https://via.placeholder.com/150?text=Error'">
+                <div class="price">${caseItem.price || 0} TON</div>
+            </div>
+        `).join('');
+    } catch (error) {
+        console.error('Ошибка загрузки данных:', error);
+        const container = document.querySelector('.cases-container');
+        container.innerHTML = `
+            <div class="case-card" data-id="1">
+                <img src="https://via.placeholder.com/150?text=Error" alt="Case Image">
+                <div class="price">0 TON</div>
+            </div>
+            <div class="case-card" data-id="2">
+                <img src="https://via.placeholder.com/150?text=Error" alt="Case Image">
+                <div class="price">0 TON</div>
+            </div>
+        `;
     }
-
-    const container = document.querySelector('.cases-container');
-    container.innerHTML = cases.map(caseItem => `
-        <div class="case-card" data-id="${caseItem.id}">
-            <img src="${caseItem.image_url || 'https://via.placeholder.com/150?text=No+Image'}" alt="Case Image" onerror="this.src='https://via.placeholder.com/150?text=Error'">
-            <div class="price">${caseItem.price || 0} TON</div>
-        </div>
-    `).join('');
 }
 
 // Инициализация
