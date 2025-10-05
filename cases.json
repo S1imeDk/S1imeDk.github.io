@@ -1,0 +1,10 @@
+[
+    {
+        "image_url": "https://via.placeholder.com/150?text=Case1",
+        "price": 5
+    },
+    {
+        "image_url": "https://via.placeholder.com/150?text=Case2",
+        "price": 10
+    }
+]
