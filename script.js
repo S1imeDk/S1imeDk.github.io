@@ -1,6 +1,6 @@
 // Supabase config — замени на свои данные
-const supabaseUrl = 'YOUR_SUPABASE_URL';
-const supabaseKey = 'YOUR_SUPABASE_ANON_KEY';
+const supabaseUrl = 'https://qxdgipwmfmzhzabplypc.supabase.com';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4ZGdpcHdtZm16aHphYnBseXBjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ2MDE4MTksImV4cCI6MjA3MDE3NzgxOX0.awTKjqPUPuZwm6Tb6_jQKMLzICb_ir-5bvXNXHVnhsw';
 const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
 // Инициализация Telegram WebApp
