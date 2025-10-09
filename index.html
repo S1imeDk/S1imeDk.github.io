@@ -1,29 +1,42 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Case Photo App</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <title>Кейсы Telegram Подарков</title>
+    <script src="https://unpkg.com/@supabase/supabase-js"></script>
+    <style>
+        .case { 
+            border: 2px solid #333; 
+            padding: 20px; 
+            margin: 10px; 
+            display: inline-block; 
+            text-align: center; 
+        }
+        .balance { font-size: 24px; font-weight: bold; }
+        .hidden { display: none; }
+    </style>
 </head>
 <body>
-    <header>
-        <div class="user-info">
-            <span class="avatar"></span>
-            <span class="username"></span>
-            <span class="balance">0.00 TON</span>
-        </div>
-    </header>
+    <div id="auth-section">
+        <button onclick="signInWithTelegram()">Войти через Telegram</button>
+    </div>
 
-    <main>
-        <div class="photo-title">Какое нибудь фото</div>
-        <div class="cases-container">
-            <div class="case-card" data-id="1"></div>
-            <div class="case-card" data-id="2"></div>
-        </div>
-    </main>
+    <div id="app" class="hidden">
+        <div class="balance">Баланс: <span id="balance">0</span> руб.</div>
+        <button onclick="showDepositModal()">Пополнить баланс</button>
+        
+        <h2>Кейсы</h2>
+        <div id="cases-container"></div>
+        
+        <h2>Мой инвентарь</h2>
+        <div id="inventory-container"></div>
+    </div>
 
-    <script src="script.js"></script>
+    <!-- Модальное окно пополнения -->
+    <div id="deposit-modal" class="hidden">
+        <h3>Пополнение баланса</h3>
+        <input type="number" id="deposit-amount" placeholder="Сумма">
+        <button onclick="processDeposit()">Пополнить</button>
+        <button onclick="hideDepositModal()">Отмена</button>
+    </div>
 </body>
 </html>
