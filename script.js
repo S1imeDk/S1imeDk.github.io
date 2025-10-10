@@ -1,190 +1,185 @@
-// Конфигурация Supabase
-const supabaseUrl = 'YOUR_SUPABASE_URL';
-const supabaseKey = 'YOUR_SUPABASE_ANON_KEY';
-const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-// Текущий пользователь
+const SUPABASE_URL = 'https://your-project.supabase.co';
+const SUPABASE_ANON_KEY = 'your-anon-key';
+const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
 let currentUser = null;
 
-// Инициализация приложения
+const casesData = [
+    { id: 1, name: 'Золото', price: 1999, image: '1000094339.jpg' },
+    { id: 2, name: 'Темно', price: 4999, image: 'case2.jpg' },
+    { id: 3, name: 'Пальма', price: 13999, image: 'case3.jpg' },
+    { id: 4, name: 'Бурж', price: 37999, image: 'case4.jpg' }
+];
+
+const bagsData = [
+    { id: 1, name: 'Замороженное сердце', price: 4500 },
+    { id: 2, name: 'Резинка с пузыриками', price: 12000 },
+    { id: 3, name: 'Кошки', price: 40000 },
+    { id: 4, name: 'Dream', price: 250000 }
+];
+
 async function initApp() {
-    // Проверяем авторизацию
+    await checkAuth();
+    renderCases();
+    renderSpecialBags();
+    loadRecentPrizes();
+}
+
+async function checkAuth() {
     const { data: { session } } = await supabase.auth.getSession();
     
     if (session) {
         currentUser = session.user;
-        showApp();
-        loadUserData();
-        loadCases();
-        loadInventory();
+        await loadUserProfile();
+        document.getElementById('app').classList.remove('hidden');
     } else {
-        showAuth();
+        createTestUser();
     }
 }
 
-// Показать основное приложение
-function showApp() {
-    document.getElementById('auth-section').classList.add('hidden');
-    document.getElementById('app').classList.remove('hidden');
+function createTestUser() {
+    currentUser = { id: 'test-user', email: 'test@example.com' };
+    document.getElementById('username').textContent = 'Игрок_NFT';
+    document.getElementById('balance').textContent = '5000';
+    document.getElementById('user-avatar').src = 'https://via.placeholder.com/80/00d4ff/ffffff?text=NFT';
 }
 
-// Показать секцию авторизации
-function showAuth() {
-    document.getElementById('auth-section').classList.remove('hidden');
-    document.getElementById('app').classList.add('hidden');
-}
-
-// Загрузка данных пользователя
-async function loadUserData() {
+async function loadUserProfile() {
     const { data: profile } = await supabase
         .from('profiles')
-        .select('balance, username')
+        .select('*')
         .eq('id', currentUser.id)
         .single();
-    
+
     if (profile) {
-        document.getElementById('balance').textContent = profile.balance;
+        document.getElementById('username').textContent = profile.username || 'Игрок';
+        document.getElementById('balance').textContent = profile.balance || 0;
+        if (profile.avatar_url) {
+            document.getElementById('user-avatar').src = profile.avatar_url;
+        }
     }
 }
 
-// Загрузка кейсов
-async function loadCases() {
-    const { data: cases } = await supabase
-        .from('cases')
-        .select('*');
-    
+function renderCases() {
     const container = document.getElementById('cases-container');
     container.innerHTML = '';
-    
-    cases.forEach(caseItem => {
+
+    casesData.forEach(caseItem => {
         const caseElement = document.createElement('div');
-        caseElement.className = 'case';
+        caseElement.className = 'case-card';
+        caseElement.onclick = () => openCase(caseItem.id);
+        
         caseElement.innerHTML = `
-            <img src="${caseItem.image_url}" width="100">
-            <h3>${caseItem.name}</h3>
-            <p>Цена: ${caseItem.price} руб.</p>
-            <button onclick="openCase(${caseItem.id})">Открыть</button>
+            <img src="${caseItem.image}" alt="${caseItem.name}" class="case-image">
+            <div class="case-name">${caseItem.name}</div>
+            <div class="case-price">${caseItem.price.toLocaleString()} ₽</div>
         `;
+        
         container.appendChild(caseElement);
     });
 }
 
-// Открытие кейса
+function renderSpecialBags() {
+    const container = document.getElementById('special-bags');
+    container.innerHTML = '';
+
+    bagsData.forEach(bag => {
+        const bagElement = document.createElement('div');
+        bagElement.className = 'bag-card';
+        
+        bagElement.innerHTML = `
+            <div class="bag-name">${bag.name}</div>
+            <div class="bag-price">${bag.price.toLocaleString()} ₽</div>
+        `;
+        
+        container.appendChild(bagElement);
+    });
+}
+
+function loadRecentPrizes() {
+    const container = document.getElementById('recent-prizes');
+    
+    // Тестовые данные
+    const recentPrizes = [
+        { name: 'NFT Арт #1', image: 'prize1.jpg' },
+        { name: 'Золотой стикер', image: 'prize2.jpg' },
+        { name: 'Редкий скин', image: 'prize3.jpg' }
+    ];
+
+    container.innerHTML = '';
+    
+    recentPrizes.forEach(prize => {
+        const prizeElement = document.createElement('div');
+        prizeElement.className = 'prize-item';
+        
+        prizeElement.innerHTML = `
+            <img src="${prize.image}" alt="${prize.name}">
+            <div>${prize.name}</div>
+        `;
+        
+        container.appendChild(prizeElement);
+    });
+}
+
 async function openCase(caseId) {
-    // 1. Проверяем баланс
-    const { data: profile } = await supabase
-        .from('profiles')
-        .select('balance')
-        .eq('id', currentUser.id)
-        .single();
+    const caseItem = casesData.find(c => c.id === caseId);
+    const balance = parseInt(document.getElementById('balance').textContent);
     
-    const { data: caseData } = await supabase
-        .from('cases')
-        .select('price')
-        .eq('id', caseId)
-        .single();
-    
-    if (profile.balance < caseData.price) {
+    if (balance < caseItem.price) {
         alert('Недостаточно средств!');
         return;
     }
-    
-    // 2. Списываем деньги
-    await supabase
-        .from('profiles')
-        .update({ balance: profile.balance - caseData.price })
-        .eq('id', currentUser.id);
-    
-    // 3. Выбираем случайный предмет
-    const { data: items } = await supabase
-        .from('case_items')
-        .select('*')
-        .eq('case_id', caseId);
-    
-    const randomItem = getRandomItem(items);
-    
-    // 4. Добавляем в инвентарь
-    await supabase
-        .from('user_inventory')
-        .insert([{
-            user_id: currentUser.id,
-            item_id: randomItem.id
-        }]);
-    
-    // 5. Записываем транзакцию
-    await supabase
-        .from('transactions')
-        .insert([{
-            user_id: currentUser.id,
-            amount: -caseData.price,
-            type: 'case_purchase',
-            description: `Покупка кейса #${caseId}`
-        }]);
-    
-    alert(`Поздравляем! Вы получили: ${randomItem.name} (${randomItem.rarity})`);
-    
-    // Обновляем интерфейс
-    loadUserData();
-    loadInventory();
-}
 
-// Алгоритм выбора предмета по вероятности
-function getRandomItem(items) {
-    const totalProbability = items.reduce((sum, item) => sum + item.probability, 0);
-    let random = Math.random() * totalProbability;
+    const newBalance = balance - caseItem.price;
+    document.getElementById('balance').textContent = newBalance;
+
+    const wonItems = [
+        'NFT Арт "Космос"',
+        'Золотой токен',
+        'Редкий стикерпак',
+        'Эксклюзивный скин'
+    ];
     
-    for (const item of items) {
-        random -= item.probability;
-        if (random <= 0) return item;
-    }
-    
-    return items[items.length - 1];
+    const wonItem = wonItems[Math.floor(Math.random() * wonItems.length)];
+   
+    document.getElementById('case-result-title').textContent = '🎉 Поздравляем!';
+    document.getElementById('case-result-item').textContent = wonItem;
+    document.getElementById('case-modal').classList.remove('hidden')
+    loadRecentPrizes();
 }
 
 // Пополнение баланса
 async function processDeposit() {
     const amount = parseInt(document.getElementById('deposit-amount').value);
     
-    if (amount < 10) {
-        alert('Минимальная сумма пополнения 10 руб.');
+    if (amount < 100) {
+        alert('Минимальная сумма пополнения 100 ₽');
         return;
     }
+
+    const currentBalance = parseInt(document.getElementById('balance').textContent);
+    const newBalance = currentBalance + amount;
     
-    // Здесь интеграция с платежной системой
-    // Пока просто увеличиваем баланс
-    const { data: profile } = await supabase
-        .from('profiles')
-        .select('balance')
-        .eq('id', currentUser.id)
-        .single();
-    
-    await supabase
-        .from('profiles')
-        .update({ balance: profile.balance + amount })
-        .eq('id', currentUser.id);
-    
-    await supabase
-        .from('transactions')
-        .insert([{
-            user_id: currentUser.id,
-            amount: amount,
-            type: 'deposit',
-            description: 'Пополнение баланса'
-        }]);
-    
+    document.getElementById('balance').textContent = newBalance;
     hideDepositModal();
-    loadUserData();
-    alert('Баланс успешно пополнен!');
+    
+    alert(`Баланс пополнен на ${amount} ₽!`);
 }
 
-// Модальные окна
+// Управление модальными окнами
 function showDepositModal() {
     document.getElementById('deposit-modal').classList.remove('hidden');
 }
 
 function hideDepositModal() {
     document.getElementById('deposit-modal').classList.add('hidden');
+    document.getElementById('deposit-amount').value = '';
+}
+
+function hideCaseModal() {
+    document.getElementById('case-modal').classList.add('hidden');
 }
 
 // Запуск приложения
-initApp();
+document.addEventListener('DOMContentLoaded', initApp);
