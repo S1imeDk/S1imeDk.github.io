@@ -1,42 +1,75 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-    <title>Кейсы Telegram Подарков</title>
-    <script src="https://unpkg.com/@supabase/supabase-js"></script>
-    <style>
-        .case { 
-            border: 2px solid #333; 
-            padding: 20px; 
-            margin: 10px; 
-            display: inline-block; 
-            text-align: center; 
-        }
-        .balance { font-size: 24px; font-weight: bold; }
-        .hidden { display: none; }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NFT Кейсы</title>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="auth-section">
-        <button onclick="signInWithTelegram()">Войти через Telegram</button>
-    </div>
+    <!-- Основа -->
+    <div class="app-container">
+        <!-- Шапка с профилем -->
+        <header class="profile-header">
+            <div class="avatar-section">
+                <img src="https://via.placeholder.com/80" alt="Аватар" class="avatar" id="user-avatar">
+                <div class="user-info">
+                    <h2 class="username" id="username">Игрок_123</h2>
+                    <div class="balance">Баланс: <span id="balance">0</span> ₽</div>
+                </div>
+            </div>
+            <button class="deposit-btn" onclick="showDepositModal()">Пополнить</button>
+        </header>
 
-    <div id="app" class="hidden">
-        <div class="balance">Баланс: <span id="balance">0</span> руб.</div>
-        <button onclick="showDepositModal()">Пополнить баланс</button>
-        
-        <h2>Кейсы</h2>
-        <div id="cases-container"></div>
-        
-        <h2>Мой инвентарь</h2>
-        <div id="inventory-container"></div>
+        <!-- Секция кейсов -->
+        <section class="cases-section">
+            <h3 class="section-title">🎁 КЕЙСЫ ДЛЯ NFT</h3>
+            <div class="cases-grid" id="cases-container">
+                <!-- Кейсы будут здесь -->
+            </div>
+        </section>
+
+        <!-- Недавно выигранные призы -->
+        <section class="recent-prizes">
+            <h3 class="section-title">🔥 НЕДАВНО ВЫИГРАНЫ</h3>
+            <div class="prizes-grid" id="recent-prizes">
+                <!-- Призы будут здесь -->
+            </div>
+        </section>
+
+        <!-- Специальные сумки -->
+        <section class="special-bags">
+            <h3 class="section-title">💎 СПЕЦИАЛЬНЫЕ СУМКИ</h3>
+            <div class="bags-grid" id="special-bags">
+                <!-- Сумки будут здесь -->
+            </div>
+        </section>
     </div>
 
     <!-- Модальное окно пополнения -->
-    <div id="deposit-modal" class="hidden">
-        <h3>Пополнение баланса</h3>
-        <input type="number" id="deposit-amount" placeholder="Сумма">
-        <button onclick="processDeposit()">Пополнить</button>
-        <button onclick="hideDepositModal()">Отмена</button>
+    <div id="deposit-modal" class="modal hidden">
+        <div class="modal-content">
+            <h3>💳 Пополнение баланса</h3>
+            <input type="number" id="deposit-amount" placeholder="Сумма в рублях" min="100">
+            <div class="modal-actions">
+                <button class="btn confirm-btn" onclick="processDeposit()">Пополнить</button>
+                <button class="btn cancel-btn" onclick="hideDepositModal()">Отмена</button>
+            </div>
+        </div>
     </div>
+
+    <!-- Модальное окно открытия кейса -->
+    <div id="case-modal" class="modal hidden">
+        <div class="modal-content case-open-content">
+            <h3 id="case-result-title">🎉 Поздравляем!</h3>
+            <div id="case-result-item" class="won-item">
+                <!-- Выигранный предмет -->
+            </div>
+            <button class="btn confirm-btn" onclick="hideCaseModal()">OK</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
 </body>
 </html>
